@@ -1,26 +1,35 @@
 package org.jenkinsci.plugins.pluginusage;
 
 import hudson.Extension;
+import hudson.Plugin;
 import hudson.model.RootAction;
+import hudson.security.Permission;
+import hudson.security.PermissionGroup;
+import hudson.security.PermissionScope;
+import jenkins.model.Jenkins;
+import org.jvnet.localizer.ResourceBundleHolder;
 
 @Extension
-public class PluginUsageView implements RootAction{
-	
+public class PluginUsageView implements RootAction {
+
+
 	public String getDisplayName() {
 		return "Plugin Usage";
 	}
 
 	public String getIconFileName() {
-		return "plugin.png";
+		return (Jenkins.get().hasPermission(Jenkins.ADMINISTER)) ? "plugin.png" : null;
 	}
 
 	public String getUrlName() {
-		return "pluginusage";
+		return (Jenkins.get().hasPermission(Jenkins.ADMINISTER)) ? "pluginusage" : null;
 	}
 	
 	public PluginUsageModel getData() {
-		PluginUsageModel pluginUsageModel = new PluginUsageModel();
-		return pluginUsageModel;
+		if (Jenkins.get().hasPermission(Jenkins.ADMINISTER)) {
+			return new PluginUsageModel();
+		}
+		return null;
 	}
 
 }
